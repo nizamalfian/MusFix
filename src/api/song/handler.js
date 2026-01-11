@@ -48,7 +48,7 @@ class SongHandler {
             {
                 status: 'success',
                 data: {
-                    song
+                    song: song
                 }
             }
         );
