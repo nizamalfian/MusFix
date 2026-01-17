@@ -359,7 +359,7 @@
       "response": []
     },
     {
-      "name": "Album - Update with Bad Note Payload",
+      "name": "Album - Update with Bad Payload",
       "event": [
         {
           "listen": "test",
@@ -464,6 +464,77 @@
       "response": []
     },
     {
+      "name": "Album - Get By ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have the correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('data');",
+              "        pm.expect(responseJson.data).to.be.an('object');",
+              "        pm.expect(responseJson.data).to.have.ownProperty('album');",
+              "        pm.expect(responseJson.data.album).to.be.an('object');",
+              "        pm.expect(responseJson.data.album).to.have.ownProperty('id');",
+              "        pm.expect(responseJson.data.album.id).to.not.equals('');",
+              "        pm.expect(responseJson.data.album).to.have.ownProperty('name');",
+              "        pm.expect(responseJson.data.album.name).to.not.equals('');",
+              "        pm.expect(responseJson.data.album).to.have.ownProperty('year');",
+              "        pm.expect(responseJson.data.album.year).to.not.equals('');",
+              "        pm.expect(responseJson.data.album).to.have.ownProperty('songs');",
+              "        pm.expect(responseJson.data.album.songs).to.be.an('array');",
+              "        pm.expect(responseJson.data.album.songs).to.be.not.empty;",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/albums/{{albumId}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "albums",
+            "{{albumId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Album - Delete",
       "event": [
         {
@@ -537,6 +608,1244 @@
           "path": [
             "albums",
             "{{albumId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Add",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 201 value',",
+              "    () => {",
+              "        pm.response.to.have.status(201);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body data should have `songId` property and not equal to empty',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        const requestJson = JSON.parse(pm.request.body.raw);",
+              "        const { data } = responseJson;",
+              "        pm.expect(data).to.ownProperty('songId');",
+              "        pm.expect(data.songId).to.not.equals('');",
+              "        pm.environment.set('songId', data.songId);",
+              "        pm.expect(data).to.ownProperty('songId');",
+              "        pm.environment.set('songTitle', requestJson.title);",
+              "        pm.environment.set('songPerformer', requestJson.performer);",
+              "",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Tertatih\",\n    \"year\": 1999,\n    \"genre\": \"Pop\",\n    \"performer\": \"Sheila On 7\",\n    \"duration\": 442,\n    \"albumId\": \"{{albumId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:{{port}}/songs",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Add with Bad Payload",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(400);",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(",
+              "            pm.response.headers.get(",
+              "                'Content-Type'",
+              "            )",
+              "        )",
+              "        .to.equals(",
+              "            'application/json; charset=utf-8'",
+              "        );",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body should have correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('fail');",
+              "        pm.expect(responseJson).to.have.ownProperty('message');",
+              "        pm.expect(responseJson.message).to.not.equals('Successfully updated song');",
+              "    }",
+              ");",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let badSongPayloads = pm.environment.set('badSongPayloads');",
+              "",
+              "if (!badSongPayloads || badSongPayloads.length === 0) {",
+              "    badSongPayloads = [",
+              "        { \"name\": 2, \"year\": '2002' },",
+              "        { \"year\": 2004 },",
+              "        { \"name\": \"Seperti Seharusnya\" }",
+              "    ]",
+              "}",
+              "",
+              "const currentBadSongPayload = badSongPayloads.shift();",
+              "pm.environment.set('currentBadSongPayload', JSON.stringify(currentBadSongPayload));",
+              "pm.environment.set('badSongPayloads', badSongPayloads);",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{{currentBadSongPayload}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:{{port}}/songs",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Get All",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have the correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('data');",
+              "        pm.expect(responseJson.data).to.be.an('object');",
+              "        pm.expect(responseJson.data).to.have.ownProperty('songs');",
+              "        pm.expect(responseJson.data.songs).to.be.an('array');",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/songs",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Get All Filter by Title (available)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have the correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('data');",
+              "        pm.expect(responseJson.data).to.be.an('object');",
+              "        pm.expect(responseJson.data).to.have.ownProperty('songs');",
+              "        pm.expect(responseJson.data.songs).to.be.an('array');",
+              "        pm.expect(responseJson.data.songs).to.be.not.empty;",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/songs?title={{songTitle}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs"
+          ],
+          "query": [
+            {
+              "key": "title",
+              "value": "{{songTitle}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Get All Filter by Performer (available)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have the correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('data');",
+              "        pm.expect(responseJson.data).to.be.an('object');",
+              "        pm.expect(responseJson.data).to.have.ownProperty('songs');",
+              "        pm.expect(responseJson.data.songs).to.be.an('array');",
+              "        pm.expect(responseJson.data.songs).to.be.not.empty;",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/songs?performer={{songPerformer}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs"
+          ],
+          "query": [
+            {
+              "key": "performer",
+              "value": "{{songPerformer}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Get All Filter by Title and Performer (available)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have the correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('data');",
+              "        pm.expect(responseJson.data).to.be.an('object');",
+              "        pm.expect(responseJson.data).to.have.ownProperty('songs');",
+              "        pm.expect(responseJson.data.songs).to.be.an('array');",
+              "        pm.expect(responseJson.data.songs).to.be.not.empty;",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/songs?title={{songTitle}}&performer={{songPerformer}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs"
+          ],
+          "query": [
+            {
+              "key": "title",
+              "value": "{{songTitle}}"
+            },
+            {
+              "key": "performer",
+              "value": "{{songPerformer}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Get All Filter by Performer and Title (available)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have the correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('data');",
+              "        pm.expect(responseJson.data).to.be.an('object');",
+              "        pm.expect(responseJson.data).to.have.ownProperty('songs');",
+              "        pm.expect(responseJson.data.songs).to.be.an('array');",
+              "        pm.expect(responseJson.data.songs).to.be.not.empty;",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/songs?performer={{songPerformer}}&title={{songTitle}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs"
+          ],
+          "query": [
+            {
+              "key": "performer",
+              "value": "{{songPerformer}}"
+            },
+            {
+              "key": "title",
+              "value": "{{songTitle}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Get All Filter by Title (not available)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have the correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('data');",
+              "        pm.expect(responseJson.data).to.be.an('object');",
+              "        pm.expect(responseJson.data).to.have.ownProperty('songs');",
+              "        pm.expect(responseJson.data.songs).to.be.an('array');",
+              "        pm.expect(responseJson.data.songs).to.be.an.empty;",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/songs?title=someFakeTitle",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs"
+          ],
+          "query": [
+            {
+              "key": "title",
+              "value": "someFakeTitle"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Get All Filter by Performer (not available)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have the correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('data');",
+              "        pm.expect(responseJson.data).to.be.an('object');",
+              "        pm.expect(responseJson.data).to.have.ownProperty('songs');",
+              "        pm.expect(responseJson.data.songs).to.be.an('array');",
+              "        pm.expect(responseJson.data.songs).to.be.an.empty;",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/songs?performer=someFakePerformer",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs"
+          ],
+          "query": [
+            {
+              "key": "performer",
+              "value": "someFakePerformer"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Get All Filter by Title and Performer (not available)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have the correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('data');",
+              "        pm.expect(responseJson.data).to.be.an('object');",
+              "        pm.expect(responseJson.data).to.have.ownProperty('songs');",
+              "        pm.expect(responseJson.data.songs).to.be.an('array');",
+              "        pm.expect(responseJson.data.songs).to.be.an.empty;",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/songs?title=someFakeTitle&performer=someFakePerformer",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs"
+          ],
+          "query": [
+            {
+              "key": "title",
+              "value": "someFakeTitle"
+            },
+            {
+              "key": "performer",
+              "value": "someFakePerformer"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Get All Filter by Performer and Title (not available)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have the correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('data');",
+              "        pm.expect(responseJson.data).to.be.an('object');",
+              "        pm.expect(responseJson.data).to.have.ownProperty('songs');",
+              "        pm.expect(responseJson.data.songs).to.be.an('array');",
+              "        pm.expect(responseJson.data.songs).to.be.an.empty;",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/songs?performer=someFakePerformer&title=someFakeTitle",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs"
+          ],
+          "query": [
+            {
+              "key": "performer",
+              "value": "someFakePerformer"
+            },
+            {
+              "key": "title",
+              "value": "someFakeTitle"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Get All Filter by Available Title and Unavailable Performer (not available)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have the correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('data');",
+              "        pm.expect(responseJson.data).to.be.an('object');",
+              "        pm.expect(responseJson.data).to.have.ownProperty('songs');",
+              "        pm.expect(responseJson.data.songs).to.be.an('array');",
+              "        pm.expect(responseJson.data.songs).to.be.an.empty;",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/songs?title={{songTitle}}&performer=someFakePerformer",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs"
+          ],
+          "query": [
+            {
+              "key": "title",
+              "value": "{{songTitle}}"
+            },
+            {
+              "key": "performer",
+              "value": "someFakePerformer"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Get All Filter by Unavailable Title and Available Performer (not available)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have the correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('data');",
+              "        pm.expect(responseJson.data).to.be.an('object');",
+              "        pm.expect(responseJson.data).to.have.ownProperty('songs');",
+              "        pm.expect(responseJson.data.songs).to.be.an('array');",
+              "        pm.expect(responseJson.data.songs).to.be.an.empty;",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/songs?title=someFakeTitle&performer={{songPerformer}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs"
+          ],
+          "query": [
+            {
+              "key": "title",
+              "value": "someFakeTitle"
+            },
+            {
+              "key": "performer",
+              "value": "{{songPerformer}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Get By ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have the correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('data');",
+              "        pm.expect(responseJson.data).to.be.an('object');",
+              "        pm.expect(responseJson.data).to.have.ownProperty('song');",
+              "        pm.expect(responseJson.data.song).to.be.an('object');",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/songs/{{songId}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs",
+            "{{songId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Update",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('message');",
+              "        pm.expect(responseJson.message).to.equals('Successfully updated song');",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"title\": \"Tertatih (New Version)\",\n    \"year\": 2000,\n    \"genre\": \"Pop rock\",\n    \"performer\": \"Sheila On 7\",\n    \"duration\": 443,\n    \"albumId\": \"{{albumId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:{{port}}/songs/{{songId}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs",
+            "{{songId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Update with Bad Payload",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(400);",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(",
+              "            pm.response.headers.get(",
+              "                'Content-Type'",
+              "            )",
+              "        )",
+              "        .to.equals(",
+              "            'application/json; charset=utf-8'",
+              "        );",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body should have correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('fail');",
+              "        pm.expect(responseJson).to.have.ownProperty('message');",
+              "        pm.expect(responseJson.message).to.not.equals('Successfully updated song');",
+              "    }",
+              ");",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let badSongPayloads = pm.environment.set('badSongPayloads');",
+              "",
+              "if (!badSongPayloads || badSongPayloads.length === 0) {",
+              "    badSongPayloads = [",
+              "        { \"name\": 2, \"year\": '2002' },",
+              "        { \"year\": 2004 },",
+              "        { \"name\": \"Seperti Seharusnya\" }",
+              "    ]",
+              "}",
+              "",
+              "const currentBadSongPayload = badSongPayloads.shift();",
+              "pm.environment.set('currentBadSongPayload', JSON.stringify(currentBadSongPayload));",
+              "pm.environment.set('badSongPayloads', badSongPayloads);",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{{currentBadSongPayload}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:{{port}}/songs/{{songId}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs",
+            "{{songId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Song - Delete",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "pm.test(",
+              "    'Response body should have correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('message');",
+              "        pm.expect(responseJson.message).to.equals('Successfully deleted song');",
+              "    }",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/songs/{{songId}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "songs",
+            "{{songId}}"
           ]
         }
       },
