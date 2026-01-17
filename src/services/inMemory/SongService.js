@@ -36,7 +36,20 @@ class SongService {
                     performer: song.performer,
                 }
             )
-        )
+        );
+    }
+
+    async getSongByAlbumId(albumId) {
+        const songs = this._songs.filter((song) => song.albumId === albumId);
+        return songs.map(song =>
+            (
+                {
+                    id: song.id,
+                    title: song.title,
+                    performer: song.performer,
+                }
+            )
+        );
     }
 
     async getSongById(id) {

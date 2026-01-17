@@ -3,8 +3,9 @@ const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
 
 class AlbumService {
-    constructor() {
+    constructor(songService) {
         this._albums = [];
+        this._songService = songService;
     }
 
     async addAlbum({ name, year}) {
@@ -46,12 +47,13 @@ class AlbumService {
             throw new NotFoundError(`Album with id ${id} not found`);
         }
 
+        const songs = await this._songService.getSongByAlbumId(album.id);
+
         return {
             id: album.id,
             name: album.name,
             year: album.year,
-            createdAt: album.createdAt,
-            updatedAt: album.updatedAt,
+            songs: songs
         };
     }
 

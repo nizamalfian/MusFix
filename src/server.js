@@ -9,8 +9,8 @@ const SongValidator = require('./validator/song');
 const ClientError = require('./exceptions/ClientError');
 
 const init = async () => {
-    const albumService = new AlbumService();
     const songService = new SongService();
+    const albumService = new AlbumService(songService);
 
     const server = Hapi.server(
         {
