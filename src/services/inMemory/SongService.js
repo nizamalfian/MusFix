@@ -27,8 +27,18 @@ class SongService {
         return id;
     }
 
-    async getSongs() {
-        return this._songs.map(song =>
+    async getSongs({ title, performer}) {
+        let filteredSongs = this._songs;
+
+        if (title) {
+            filteredSongs = filteredSongs.filter((song) => song.title === title);
+        }
+
+        if (performer) {
+            filteredSongs = filteredSongs.filter((song) => song.performer === performer);
+        }
+
+        return filteredSongs.map(song =>
             (
                 {
                     id: song.id,
