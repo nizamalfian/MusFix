@@ -19,7 +19,7 @@ class SongHandler {
             {
                 status: 'success',
                 data: {
-                    song_id: songId
+                    songId: songId
                 }
             }
         )
@@ -70,7 +70,7 @@ class SongHandler {
         return response;
     }
 
-    async deleteSongByIdHandler(request) {
+    async deleteSongByIdHandler(request, h) {
         const { id } = request.params;
         await this._service.deleteSongById(id);
         const response = h.response(

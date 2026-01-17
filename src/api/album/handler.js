@@ -5,6 +5,7 @@ class AlbumHandler {
 
         this.postAlbumHandler = this.postAlbumHandler.bind(this);
         this.getAlbumsHandler = this.getAlbumsHandler.bind(this);
+        this.getAlbumByIdHandler = this.getAlbumByIdHandler.bind(this);
         this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this);
         this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this);
     }
@@ -19,7 +20,7 @@ class AlbumHandler {
             {
                 status: 'success',
                 data: {
-                    album_id: albumId
+                    albumId: albumId
                 }
             }
         );
@@ -37,6 +38,21 @@ class AlbumHandler {
                 }
             }
         )
+        response.code(200);
+        return response;
+    }
+
+    async getAlbumByIdHandler(request, h) {
+        const { id } = request.params;
+        const album = await this._service.getAlbumById(id);
+        const response = h.response(
+            {
+                status: 'success',
+                data: {
+                    album: album
+                }
+            }
+        );
         response.code(200);
         return response;
     }

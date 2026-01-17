@@ -40,40 +40,43 @@ class SongService {
     }
 
     async getSongById(id) {
-        const song = this._songs
-            .find(song => song.id === id)
-            .map(song =>
-                (
-                    {
-                        id: song.id,
-                        title: song.title,
-                        year: song.year,
-                        performer: song.performer,
-                        genre: song.genre,
-                        duration: song.duration,
-                        albumId: song.albumId,
-                    }
-                )
-            )
-        ;
+        const song = this._songs.find((song) => song.id === id);
 
         if (!song) {
             throw new NotFoundError(`Song with id ${id} not found`);
         }
 
-        return song;
+        return {
+            id: song.id,
+            title: song.title,
+            year: song.year,
+            performer: song.performer,
+            genre: song.genre,
+            duration: song.duration,
+            albumId: song.albumId,
+        };
     }
 
     async editSongById(id, {title, year, genre, performer, duration, albumId }) {
-        const index = this._songs.findIndex(song => song.id === id);
+        const index = this._songs.findIndex((song) => song.id === id);
 
         if (-1 === index) {
             throw new NotFoundError(`Song with id ${id} not found, failed to be edited`);
         }
 
+        const updatedAt = new Date().toISOString();
+
         this._songs[index] = {
             ...this._songs[index],
-            title, year, genre, performer, duration, albumId
+            title, year, genre, performer, duration, albumId, updatedAt
+        }
+    }
+
+    async deleteSongById(id) {
+        const index = this._songs.findIndex((song) => song.id === id);
+
+        if (-1 === index) {
+            throw new NotFoundError(`Song with id ${id} not found`);
         }
 
         this._songs.splice(index, 1);

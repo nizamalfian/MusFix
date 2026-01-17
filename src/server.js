@@ -57,16 +57,9 @@ const init = async () => {
                 )
                 newResponse.code(response.statusCode);
                 return newResponse;
-            } else {
-                const newResponse = h.response(
-                    {
-                        status: 'error',
-                        message: response.message,
-                    }
-                )
-                newResponse.code(500);
-                return newResponse;
             }
+
+            return h.continue;
         }
     );
 

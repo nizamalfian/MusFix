@@ -2,7 +2,7 @@ const routes = (songHandler) => [
     {
         method: 'POST',
         path: '/songs',
-        handler: songHandler.postSongsHandler,
+        handler: songHandler.postSongHandler,
     },
     {
         method: 'GET',
@@ -10,14 +10,19 @@ const routes = (songHandler) => [
         handler: songHandler.getSongsHandler,
     },
     {
+        method: 'GET',
+        path: '/songs/{id}',
+        handler: songHandler.getSongByIdHandler,
+    },
+    {
         method: 'PUT',
-        path: '/songs',
-        handler: songHandler.putSongsHandler,
+        path: '/songs/{id}',
+        handler: songHandler.putSongByIdHandler,
     },
     {
         method: 'DELETE',
-        path: '/songs',
-        handler: songHandler.deleteSongsByIdHandler,
+        path: '/songs/{id}',
+        handler: songHandler.deleteSongByIdHandler,
     },
 ];
 

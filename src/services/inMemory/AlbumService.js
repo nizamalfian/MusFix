@@ -7,7 +7,7 @@ class AlbumService {
         this._albums = [];
     }
 
-    async addNote({ name, year}) {
+    async addAlbum({ name, year}) {
         const id = nanoid(16);
         const createdAt = new Date().toISOString();
         const updatedAt = createdAt;
@@ -39,8 +39,24 @@ class AlbumService {
         )
     }
 
+    async getAlbumById(id) {
+        const album = this._albums.find((album) => album.id === id)
+
+        if (!album) {
+            throw new NotFoundError(`Album with id ${id} not found`);
+        }
+
+        return {
+            id: album.id,
+            name: album.name,
+            year: album.year,
+            createdAt: album.createdAt,
+            updatedAt: album.updatedAt,
+        };
+    }
+
     async editAlbumById(id, { name, year }) {
-        const index = this._albums.findIndex(album => album.id === id);
+        const index = this._albums.findIndex((album) => album.id === id);
 
         if (-1 === index) {
             throw new NotFoundError(`Album with id ${id} not found, failed to be edited`);
@@ -55,7 +71,7 @@ class AlbumService {
     }
 
     async deleteAlbumById(id) {
-        const index = this._albums.findIndex(album => album.id === id);
+        const index = this._albums.findIndex((album) => album.id === id);
 
         if (-1 === index) {
             throw new NotFoundError(`Album with id ${id} not found, failed to be deleted.`);

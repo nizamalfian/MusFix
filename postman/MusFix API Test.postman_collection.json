@@ -1,0 +1,546 @@
+{
+  "info": {
+    "_postman_id": "90b65ace-55d5-4029-981b-083e304d1634",
+    "name": "MusFix API Test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "1263834"
+  },
+  "item": [
+    {
+      "name": "Album - Add",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(201);",
+              "    }",
+              ")",
+              "",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(",
+              "            pm.response.headers.get(",
+              "                'Content-Type'",
+              "            )",
+              "        )",
+              "        .to.equals(",
+              "            'application/json; charset=utf-8'",
+              "        );",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body should an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body data should have `albumId` property and not equal to empty',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        const { data } = responseJson;",
+              "",
+              "        pm.expect(data).to.ownProperty('albumId');",
+              "        pm.expect(data.albumId).to.not.equals('');",
+              "",
+              "        pm.environment.set('albumId', data.albumId);",
+              "    }",
+              ");",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"Sheila On 7\", \"year\": 1999 }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:{{port}}/albums",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "albums"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Album - Add with Bad Payload",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(400);",
+              "    }",
+              ")",
+              "",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(",
+              "            pm.response.headers.get(",
+              "                'Content-Type'",
+              "            )",
+              "        )",
+              "        .to.equals(",
+              "            'application/json; charset=utf-8'",
+              "        );",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body should an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "",
+              "pm.text(",
+              "    'Response body data should have `albumId` property and not equal to empty',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        const { data } = responseJson;",
+              "",
+              "        pm.expect(data).to.ownProperty('albumId');",
+              "        pm.expect(data.albumId).to.not.equals('');",
+              "",
+              "        pm.environment.set('albumId', data.albumId);",
+              "    }",
+              ");",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let badAlbumPayloads = pm.environemnt.get('badAlbumPayloads');",
+              "",
+              "if (!badAlbumPayloads || badAlbumPayloads.length === 0) {",
+              "    badAlbumPayloads = [",
+              "        { \"name\": \"Bintang Lima\", \"year\": 2000 },",
+              "        { \"name\": \"OST Ada Apa Dengan Cinta?\", \"year\": 2002 },",
+              "        { \"name\": \"Bintang di Surga\", \"year\": 2004 },",
+              "        { \"name\": \"Seperti Seharusnya\", \"year\": 2012 },",
+              "        { \"name\": \"Gajah\", \"year\": 2014 }",
+              "    ]",
+              "}",
+              "",
+              "const currentBadAlbumPayload = badAlbumPayloads.shift();",
+              "pm.environment.set('currentBadAlbumPayload', currentBadAlbumPayload);",
+              "pm.environment.set('badAlbumPayloads', badAlbumPayloads);",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{{currentBadAlbumPayload}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:{{port}}/albums",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "albums"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Album - Get All",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(",
+              "            pm.response.headers.get(",
+              "                'Content-Type'",
+              "            )",
+              "        )",
+              "        .to.equals(",
+              "            'application/json; charset=utf-8'",
+              "        );",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body should an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body should have the correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('data');",
+              "        pm.expect(responseJson.data).to.be.an('object');",
+              "        pm.expect(responseJson.data).to.have.ownProperty('album');",
+              "        pm.expect(responseJson.data.album).to.be.an('array');",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body data should have an albums array and contains at least 1 item',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        const { data } = responseJson;",
+              "",
+              "        pm.expect(data).to.have.ownProperty('album');",
+              "        pm.expect(data.album).to.be.an('array');",
+              "        pm.expect(data.album).lengthOf.at.least(1);",
+              "    }",
+              ");",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/albums",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "albums"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Album - Update",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(",
+              "            pm.response.headers.get(",
+              "                'Content-Type'",
+              "            )",
+              "        )",
+              "        .to.equals(",
+              "            'application/json; charset=utf-8'",
+              "        );",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body should have correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('message');",
+              "        pm.expect(responseJson.message).to.equals('Successfully updated album');",
+              "    }",
+              ");",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"name\": \"Sheila On 8\", \"year\": 1999 }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:{{port}}/albums/{{albumId}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "albums",
+            "{{albumId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Album - Update with Bad Note Payload",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(400);",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(",
+              "            pm.response.headers.get(",
+              "                'Content-Type'",
+              "            )",
+              "        )",
+              "        .to.equals(",
+              "            'application/json; charset=utf-8'",
+              "        );",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body should have correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('fail');",
+              "        pm.expect(responseJson).to.have.ownProperty('message');",
+              "        pm.expect(responseJson.message).to.not.equals('Successfully updated album');",
+              "    }",
+              ");",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let badAlbumPayloads = pm.environment.set('badAlbumPayloads');",
+              "",
+              "if (!badAlbumPayloads || badAlbumPayloads.length === 0) {",
+              "    badAlbumPayloads = [",
+              "        { \"name\": 2, \"year\": '2002' },",
+              "        { \"year\": 2004 },",
+              "        { \"name\": \"Seperti Seharusnya\" }",
+              "    ]",
+              "}",
+              "",
+              "const currentBadAlbumPayload = badAlbumPayloads.shift();",
+              "pm.environment.set('currentBadAlbumPayload', JSON.stringify(currentBadAlbumPayload));",
+              "pm.environment.set('badAlbumPayloads', badAlbumPayloads);",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{{currentBadAlbumPayload}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:{{port}}/albums/{{albumId}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "albums",
+            "{{albumId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Album - Delete",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(",
+              "    'Response status code should have 200 value',",
+              "    () => {",
+              "        pm.response.to.have.status(200);",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response Content-Type header should have application/json value',",
+              "    () => {",
+              "        pm.expect(",
+              "            pm.response.headers.get(",
+              "                'Content-Type'",
+              "            )",
+              "        )",
+              "        .to.equals(",
+              "            'application/json; charset=utf-8'",
+              "        );",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body should be an object',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "        pm.expect(responseJson).to.be.an('object');",
+              "    }",
+              ");",
+              "",
+              "pm.test(",
+              "    'Response body should have correct property and value',",
+              "    () => {",
+              "        const responseJson = pm.response.json();",
+              "",
+              "        pm.expect(responseJson).to.have.ownProperty('status');",
+              "        pm.expect(responseJson.status).to.equals('success');",
+              "        pm.expect(responseJson).to.have.ownProperty('message');",
+              "        pm.expect(responseJson.message).to.equals('Successfully deleted album');",
+              "    }",
+              ");",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "packages": {},
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "localhost:{{port}}/albums/{{albumId}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "{{port}}",
+          "path": [
+            "albums",
+            "{{albumId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
