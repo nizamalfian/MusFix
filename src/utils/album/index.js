@@ -1,4 +1,4 @@
-const mapDBToModel = (
+const mapAlbumDBToModel = (
     {
         id, name, year, created_at, updated_at
     }
@@ -8,5 +8,5 @@ const mapDBToModel = (
     }
 )
 
-module.exports = { mapDBToModel };
+module.exports = { mapAlbumDBToModel };
 
