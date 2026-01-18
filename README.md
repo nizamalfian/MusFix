@@ -15,20 +15,21 @@ This is the API for the MusFix music service.
 
 ## Configuration
 
-This project uses environment variables for configuration, which should be stored in a `.env` file in the root directory. Create a file named `.env` and populate it with the following variables:
+This project uses environment variables for configuration. To get started, you'll need to create a `.env` file for development and a `.prod.env` file for production.
 
-```
-HOST=0.0.0.0
-PORT=5000
+1.  **Copy the example files:**
+    For development, copy the provided example file:
+    ```bash
+    cp .env.example .env
+    ```
+    For production, do the same for the production environment:
+    ```bash
+    cp .prod.env.example .prod.env
+    ```
 
-PGUSER=your_postgres_username
-PGHOST=localhost
-PGPASSWORD=your_postgres_password
-PGDATABASE=your_database_name
-PGPORT=5432
-```
+2.  **Fill in your credentials:**
+    Now, open the newly created `.env` (and/or `.prod.env`) file and fill in your specific configuration details, such as database credentials and server port. The actual `.env` and `.prod.env` files are ignored by Git, so your secrets will not be committed to the repository.
 
-Make sure to replace `your_postgres_username`, `your_postgres_password`, and `your_database_name` with your actual PostgreSQL credentials.
 
 ## Usage
 
