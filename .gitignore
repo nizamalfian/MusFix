@@ -17,8 +17,8 @@ pnpm-debug.log*
 # =========================
 # Environment variables
 # =========================
-#.env
-#.prod.env
+.env
+.prod.env
 !.env.example
 
 # =========================
