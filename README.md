@@ -13,6 +13,23 @@ This is the API for the MusFix music service.
    npm install
    ```
 
+## Configuration
+
+This project uses environment variables for configuration, which should be stored in a `.env` file in the root directory. Create a file named `.env` and populate it with the following variables:
+
+```
+HOST=0.0.0.0
+PORT=5000
+
+PGUSER=your_postgres_username
+PGHOST=localhost
+PGPASSWORD=your_postgres_password
+PGDATABASE=your_database_name
+PGPORT=5432
+```
+
+Make sure to replace `your_postgres_username`, `your_postgres_password`, and `your_database_name` with your actual PostgreSQL credentials.
+
 ## Usage
 
 ### Development
