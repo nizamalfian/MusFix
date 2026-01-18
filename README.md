@@ -50,3 +50,11 @@ To run database migrations, use:
 ```bash
 npm run migrate
 ```
+
+## End-to-End API Testing (Postman)
+This project includes Postman files for End-to-End (E2E) API testing.
+
+-   `./postman/MusFix API Test.postman_collection.json`: This file contains a collection of API requests that can be used to test the various endpoints of the MusFix API.
+-   `./postman/MusFix API Test.postman_environment.json`: This file defines the environment variables used by the Postman collection, such as the base URL of the API.
+
+To use these files, import them into Postman and set up your local environment.
