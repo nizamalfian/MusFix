@@ -50,7 +50,15 @@ class SongService {
 
         const { rows } = await this._pool.query(query, values);
 
-        return rows.map(mapSongDBToModel);
+        return rows.map(song =>
+            (
+                {
+                    id: song.id,
+                    title: song.title,
+                    performer: song.performer,
+                }
+            )
+        );
     }
 
     async getSongByAlbumId(albumId) {
