@@ -15,7 +15,15 @@ This is the API for the MusFix music service.
 
 ## Configuration
 
-This project uses environment variables for configuration. The required variables are present in the `.env` and `.prod.env` files. After cloning the repository, you will need to fill in your local credentials in these files.
+This project uses environment variables for configuration. To get started, follow these steps:
+
+1.  **Copy the Template File**: For development, create a copy of the example file and name it `.env`.
+    ```bash
+    cp .env.example .env
+    ```
+    For a production setup, you would do the same with `.prod.env`.
+
+2.  **Fill in Local Credentials**: Open the new `.env` file and fill in your specific database credentials and other settings. This file is listed in `.gitignore`, so your secrets will not be committed.
 
 ## Usage
 
