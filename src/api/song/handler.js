@@ -10,78 +10,88 @@ class SongHandler {
         this.deleteSongByIdHandler = this.deleteSongByIdHandler.bind(this);
     }
 
-    async postSongHandler(request, h) {
-        this._validator.validateSongPayload(request.payload);
+    async postSongHandler(req, res, next) {
+        try {
+            this._validator.validateSongPayload(req.body);
 
-        const songId = await this._service.addSong(request.payload);
+            const songId = await this._service.addSong(req.body);
 
-        const response = await h.response(
-            {
-                status: 'success',
-                data: {
-                    songId: songId
+            res.status(201).json(
+                {
+                    status: 'success',
+                    data: {
+                        songId: songId
+                    }
                 }
-            }
-        )
-        response.code(201);
-        return response;
+            );
+        } catch (error) {
+            next(error);
+        }
     }
 
-    async getSongsHandler(request, h) {
-        const { title, performer } = request.query;
-        const songs = await this._service.getSongs({ title, performer });
-        const response = h.response(
-            {
-                status: 'success',
-                data: {
-                    songs: songs
+    async getSongsHandler(req, res, next) {
+        try {
+            const { title, performer } = req.query;
+            const songs = await this._service.getSongs({ title, performer });
+            res.status(200).json(
+                {
+                    status: 'success',
+                    data: {
+                        songs: songs
+                    }
                 }
-            }
-        )
-        response.code(200);
-        return response;
+            );
+        } catch (error) {
+            next(error);
+        }
     }
 
-    async getSongByIdHandler(request, h) {
-        const { id } = request.params;
-        const song = await this._service.getSongById(id);
-        const response = h.response(
-            {
-                status: 'success',
-                data: {
-                    song: song
+    async getSongByIdHandler(req, res, next) {
+        try {
+            const { id } = req.params;
+            const song = await this._service.getSongById(id);
+            res.status(200).json(
+                {
+                    status: 'success',
+                    data: {
+                        song: song
+                    }
                 }
-            }
-        );
-        response.code(200);
-        return response;
+            );
+        } catch (error) {
+            next(error);
+        }
     }
 
-    async putSongByIdHandler(request, h) {
-        this._validator.validateSongPayload(request.payload);
-        const { id } = request.params;
-        await this._service.editSongById(id, request.payload);
-        const response = h.response(
-            {
-                status: 'success',
-                message: 'Successfully updated song'
-            }
-        )
-        response.code(200);
-        return response;
+    async putSongByIdHandler(req, res, next) {
+        try {
+            this._validator.validateSongPayload(req.body);
+            const { id } = req.params;
+            await this._service.editSongById(id, req.body);
+            res.status(200).json(
+                {
+                    status: 'success',
+                    message: 'Successfully updated song'
+                }
+            );
+        } catch (error) {
+            next(error);
+        }
     }
 
-    async deleteSongByIdHandler(request, h) {
-        const { id } = request.params;
-        await this._service.deleteSongById(id);
-        const response = h.response(
-            {
-                status: 'success',
-                message: 'Successfully deleted song'
-            }
-        )
-        response.code(200);
-        return response;
+    async deleteSongByIdHandler(req, res, next) {
+        try {
+            const { id } = req.params;
+            await this._service.deleteSongById(id);
+            res.status(200).json(
+                {
+                    status: 'success',
+                    message: 'Successfully deleted song'
+                }
+            );
+        } catch (error) {
+            next(error);
+        }
     }
 }
 

@@ -1,7 +1,8 @@
 import 'dotenv/config';
-import Hapi from '@hapi/hapi';
-import album from './api/album/index.js';
-import song from './api/song/index.js';
+import express from 'express';
+import cors from 'cors';
+import albumApi from './api/album/index.js';
+import songApi from './api/song/index.js';
 import AlbumService from './services/postgres/AlbumService.js';
 import AlbumValidator from './validator/album/index.js';
 import SongService from './services/postgres/SongService.js';
@@ -12,59 +13,38 @@ const init = async () => {
     const songService = new SongService();
     const albumService = new AlbumService(songService);
 
-    const server = Hapi.server(
-        {
-            port: process.env.PORT,
-            host: process.env.HOST,
-            routes: {
-                cors: {
-                    origin: ['*'],
-                }
-            }
+    const app = express();
+
+    app.use(cors());
+    app.use(express.json());
+
+    const albumRouter = albumApi({ service: albumService, validator: AlbumValidator });
+    app.use(albumRouter);
+
+    const songRouter = songApi({ service: songService, validator: SongValidator });
+    app.use(songRouter);
+
+    app.use((err, req, res, next) => {
+        if (err instanceof ClientError) {
+            return res.status(err.statusCode).json({
+                status: 'fail',
+                message: err.message,
+            });
         }
-    );
+        console.error(err);
+        return res.status(500).json({
+            status: 'error',
+            message: 'Internal Server Error',
+        });
+    });
 
-    await server.register(
-        [
-            {
-                plugin: album,
-                options: {
-                    service: albumService,
-                    validator: AlbumValidator,
-                }
-            },
-            {
-                plugin: song,
-                options: {
-                    service: songService,
-                    validator: SongValidator,
-                }
-            },
-        ]
-    );
+    const port = process.env.PORT;
+    const host = process.env.HOST;
 
-    server.ext(
-        'onPreResponse',
-        (request, h) => {
-            const { response } = request;
-
-            if (response instanceof ClientError) {
-                const newResponse = h.response(
-                    {
-                        status: 'fail',
-                        message: response.message,
-                    }
-                )
-                newResponse.code(response.statusCode);
-                return newResponse;
-            }
-
-            return h.continue;
-        }
-    );
-
-    await server.start();
-    console.log(`Server is running on ${server.info.uri}...`);
+    app.listen(port, host, () => {
+        console.log(`Server is running on http://${host}:${port}...`);
+    });
 };
 
 init();
+
