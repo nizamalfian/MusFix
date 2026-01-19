@@ -85,4 +85,4 @@ class AlbumHandler {
     }
 }
 
-module.exports = AlbumHandler;
+export default AlbumHandler;

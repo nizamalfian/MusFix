@@ -8,5 +8,5 @@ const mapAlbumDBToModel = (
     }
 )
 
-module.exports = { mapAlbumDBToModel };
+export { mapAlbumDBToModel };
 

@@ -26,4 +26,4 @@ const routes = (albumHandler) => [
     },
 ];
 
-module.exports = routes;
+export default routes;

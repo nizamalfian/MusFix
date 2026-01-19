@@ -1,8 +1,8 @@
-const { Pool } = require('pg');
-const { nanoid } = require('nanoid');
-const InvariantError = require('../../exceptions/InvariantError');
-const NotFoundError = require('../../exceptions/NotFoundError');
-const { mapAlbumDBToModel } = require('../../utils/album');
+import { Pool } from 'pg';
+import { nanoid } from 'nanoid';
+import InvariantError from '../../exceptions/InvariantError.js';
+import NotFoundError from '../../exceptions/NotFoundError.js';
+import { mapAlbumDBToModel } from '../../utils/album/index.js';
 
 class AlbumService {
     constructor(songService) {
@@ -84,4 +84,4 @@ class AlbumService {
     }
 }
 
-module.exports = AlbumService;
+export default AlbumService;

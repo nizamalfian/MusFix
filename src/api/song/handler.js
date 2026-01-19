@@ -85,4 +85,4 @@ class SongHandler {
     }
 }
 
-module.exports = SongHandler;
+export default SongHandler;

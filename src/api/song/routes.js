@@ -26,4 +26,4 @@ const routes = (songHandler) => [
     },
 ];
 
-module.exports = routes;
+export default routes;

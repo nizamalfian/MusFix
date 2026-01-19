@@ -1,12 +1,12 @@
-require('dotenv').config();
-const Hapi = require('@hapi/hapi');
-const album = require('./api/album');
-const song = require('./api/song');
-const AlbumService = require('./services/postgres/AlbumService');
-const AlbumValidator = require('./validator/album');
-const SongService = require('./services/postgres/SongService');
-const SongValidator = require('./validator/song');
-const ClientError = require('./exceptions/ClientError');
+import 'dotenv/config';
+import Hapi from '@hapi/hapi';
+import album from './api/album/index.js';
+import song from './api/song/index.js';
+import AlbumService from './services/postgres/AlbumService.js';
+import AlbumValidator from './validator/album/index.js';
+import SongService from './services/postgres/SongService.js';
+import SongValidator from './validator/song/index.js';
+import ClientError from './exceptions/ClientError.js';
 
 const init = async () => {
     const songService = new SongService();
