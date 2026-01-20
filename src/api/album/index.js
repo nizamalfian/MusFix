@@ -1,11 +1,9 @@
-const AlbumHandler = require('./handler');
-const routes = require('./routes');
+import AlbumHandler from './handler.js';
+import createAlbumRouter from './routes.js';
 
-module.exports = {
-    name: 'album',
-    version: '1.0.0',
-    register: async (server, { service, validator }) => {
-        const albumHandler = new AlbumHandler(service, validator);
-        server.route(routes(albumHandler));
-    }
-}
+const albumApi = ({ service, validator }) => {
+    const albumHandler = new AlbumHandler(service, validator);
+    return createAlbumRouter(albumHandler);
+};
+
+export default albumApi;

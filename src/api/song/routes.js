@@ -1,29 +1,15 @@
-const routes = (songHandler) => [
-    {
-        method: 'POST',
-        path: '/songs',
-        handler: songHandler.postSongHandler,
-    },
-    {
-        method: 'GET',
-        path: '/songs',
-        handler: songHandler.getSongsHandler,
-    },
-    {
-        method: 'GET',
-        path: '/songs/{id}',
-        handler: songHandler.getSongByIdHandler,
-    },
-    {
-        method: 'PUT',
-        path: '/songs/{id}',
-        handler: songHandler.putSongByIdHandler,
-    },
-    {
-        method: 'DELETE',
-        path: '/songs/{id}',
-        handler: songHandler.deleteSongByIdHandler,
-    },
-];
+import express from 'express';
 
-module.exports = routes;
+const createSongRouter = (songHandler) => {
+    const router = express.Router();
+
+    router.post('/songs', songHandler.postSongHandler);
+    router.get('/songs', songHandler.getSongsHandler);
+    router.get('/songs/:id', songHandler.getSongByIdHandler);
+    router.put('/songs/:id', songHandler.putSongByIdHandler);
+    router.delete('/songs/:id', songHandler.deleteSongByIdHandler);
+
+    return router;
+};
+
+export default createSongRouter;

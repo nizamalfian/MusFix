@@ -8,4 +8,4 @@ const mapSongDBToModel = (
     }
 )
 
-module.exports = { mapSongDBToModel };
+export { mapSongDBToModel };
